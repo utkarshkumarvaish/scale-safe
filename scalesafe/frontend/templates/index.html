@@ -3,10 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <title>Scale Safe</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+body {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    color: white;
+    overflow: hidden; /* Prevent scrollbars from appearing */
+    position: relative; /* Position relative for absolute positioning of circles */
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Place behind other content */
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.737); /* Semi-transparent white */
+    pointer-events: none; /* Ensure circles don't interfere with clicks */
+}
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 70px;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 3s steps(30, end), blink-caret 0.75s step-end infinite;
+    font-style: italic;
+    font-weight: bolder;
+    z-index: 1; /* Place above the circles */
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 45%; }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: white; }
+}
+
+.links {
+    display: flex;
+    gap: 20px;
+    z-index: 1; /* Place above the circles */
+}
+
+.links a {
+    margin-right: 10px;
+    font-size: 1.1rem;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    background-color:#323e52 !important;
+    padding: 20px 30px;
+    margin: 10px;
+    box-shadow: 0 4px 8px rgb(251, 250, 250);
+    transition: background-color 0.3s, transform 0.3s;
+    z-index: 1; /* Place above the circles */
+}
+.login:hover{
+    background-color: #84d6db !important;
+    transform: scale(1.1);
+}
+a:hover {
+    background-color: #d45079 !important;
+    transform: scale(1.1);
+}
+
+    </style>
 </head>
 <body>
-    <h1>Welcome to Scale Safe</h1>
-    <a href="{{ url_for('login') }}">Login</a>
-    <a href="{{ url_for('signup') }}">Sign Up</a>
+    <h1>Welcome to Scale Safe!</h1>
+    <div class="links">
+        <a href="{{ url_for('login') }}" class="btn btn-link login">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="{{ url_for('signup') }}" class="btn btn-link">
+            <i class="fas fa-user-plus"></i> Sign Up
+        </a>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.querySelector('body');
+            const numCircles = 100; // Number of circles
+            const minSize = 10; // Minimum circle size
+            const maxSize = 30; // Maximum circle size
+        
+            for (let i = 0; i < numCircles; i++) {
+                const circle = document.createElement('div');
+                circle.classList.add('circle');
+                const size = Math.random() * (maxSize - minSize) + minSize;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                circle.style.top = `${Math.random() * 100}vh`;
+                circle.style.left = `${Math.random() * 100}vw`;
+                circle.style.opacity = Math.random() * 0.5 + 0.2; // Random opacity between 0.2 and 0.7
+                body.appendChild(circle);
+            }
+        });
+    </script>        
 </body>
 </html>
