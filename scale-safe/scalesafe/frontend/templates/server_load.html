@@ -3,6 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Current Server Load</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #518f94, #7ca8ab);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: black;
+            animation: fadeIn 2s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
     <h1>Current Server Load</h1>
