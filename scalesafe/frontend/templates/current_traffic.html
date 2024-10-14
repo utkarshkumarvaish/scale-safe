@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Current Traffic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #518f94, #7ca8ab);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: black;
+            animation: fadeIn 2s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Current Traffic</h1>
+        <form id="trafficForm" onsubmit="event.preventDefault(); analyzeTraffic();">
+            <label for="url">URL:</label>
+            <input type="text" id="url" name="url" placeholder="Enter URL here" required>
+            <button type="submit">Analyze</button>
+        </form>
+        <div id="trafficGraph">
+            <!-- The graph image will be displayed here -->
+        </div>
+    </main>
+
+    <script>
+        function analyzeTraffic() {
+            const formData = new FormData(document.getElementById('trafficForm'));
+            fetch('http://localhost:5000/traffic/analyze', { // Use the correct endpoint
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const imgURL = URL.createObjectURL(blob);
+                const imgElement = document.createElement('img');
+                imgElement.src = imgURL;
+                imgElement.alt = 'Traffic Analysis Graph';
+                imgElement.style.width = '80%'; // Set a width for the image
+                imgElement.style.height = 'auto'; // Maintain aspect ratio
+                document.getElementById('trafficGraph').innerHTML = ''; // Clear previous graph
+                document.getElementById('trafficGraph').appendChild(imgElement);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('trafficGraph').innerHTML = '<p>Could not retrieve the traffic graph.</p>';
+            });
+        }
+    </script>
+</body>
+</html>

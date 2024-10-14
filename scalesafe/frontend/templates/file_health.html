@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Health</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #518f94, #7ca8ab);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: black;
+            animation: fadeIn 2s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        table {
+            margin: 0 auto;
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        th, td {
+            padding: 10px;
+        }
+        th {
+            background: #575757;
+        }
+        td {
+            background: #84d6db;
+        }
+    </style>
+</head>
+<body>
+    <h1>File Health Status</h1>
+    <table>
+        <tr>
+            <th>Filename</th>
+            <th>Status</th>
+        </tr>
+        {% for file in files %}
+        <tr>
+            <td>{{ file.filename }}</td>
+            <td>{{ file.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
