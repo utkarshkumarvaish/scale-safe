@@ -43,7 +43,7 @@
     <script>
         function analyzeTraffic() {
             const formData = new FormData(document.getElementById('trafficForm'));
-            fetch('http://localhost:5000/traffic/analyze', { // Use the correct endpoint
+            fetch('http://172.191.2.234:5000/traffic/analyze', { // Use the correct endpoint
                 method: 'POST',
                 body: formData
             })
