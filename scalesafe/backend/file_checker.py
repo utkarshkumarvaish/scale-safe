@@ -1,24 +1,43 @@
-from flask import Blueprint, request, jsonify
-import boto3
-import hashlib
+import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
-file_checker_bp = Blueprint('file_checker', __name__)
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
-def check_file_integrity(file):
-    hash_md5 = hashlib.md5()
-    for chunk in iter(lambda: file.read(4096), b""):
-        hash_md5.update(chunk)
-    file.seek(0)
-    return hash_md5.hexdigest()
+# Set upload folder path
+UPLOAD_FOLDER = r'C:\Users\HP\Desktop\scalesafegit\scale-safe\scalesafe\backend\uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-@file_checker_bp.route('/upload', methods=['POST'])
+# Ensure uploads directory exists
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+# File upload route
+@app.route('/file/upload', methods=['POST'])
 def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    
     file = request.files['file']
-    integrity_hash = check_file_integrity(file)
-    # Check hash against a database or list of known vulnerabilities (not implemented here)
-    # Assume a function `is_vulnerable` that checks the file against known issues
-    if is_vulnerable(integrity_hash):
-        return jsonify({'status': 'bad file', 'message': 'File is corrupted or vulnerable'}), 400
-    s3 = boto3.client('s3')
-    s3.upload_fileobj(file, 'your-bucket-name', file.filename)
-    return jsonify({'status': 'good file', 'message': 'File uploaded successfully'}), 200
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    # Save file to the specified folder
+    try:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(file_path)
+
+        # Here, you'd process the file (e.g., check for corruption or health)
+        # For now, we're just going to mock a result for demonstration.
+        file_status = 'Healthy'  # Example, you can add your file validation logic here
+
+        # Respond with the filename and its health status
+        return jsonify({'filename': file.filename, 'status': file_status})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)

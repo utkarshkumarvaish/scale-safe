@@ -2,38 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>File Health</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Health Checker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(to right, #518f94, #7ca8ab);
             color: white;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
             text-align: center;
             padding: 20px;
         }
         h1 {
             color: black;
-            animation: fadeIn 2s ease-out;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        table {
-            margin: 0 auto;
-            background: #333;
+        .section {
+            margin: 20px 0;
             padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
+        table {
+            margin: 10px auto;
+            width: 100%;
+            max-width: 600px;
+            background: #333;
+            border-collapse: collapse;
+        }
         th, td {
             padding: 10px;
+            text-align: center;
         }
         th {
             background: #575757;
@@ -41,21 +46,104 @@
         td {
             background: #84d6db;
         }
+        input[type="file"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #575757;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #84d6db;
+            color: black;
+        }
+        #file-result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <h1>File Health Status</h1>
-    <table>
-        <tr>
-            <th>Filename</th>
-            <th>Status</th>
-        </tr>
-        {% for file in files %}
-        <tr>
-            <td>{{ file.filename }}</td>
-            <td>{{ file.status }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="container">
+        <h1>File Health Checker</h1>
+        <div class="section">
+            <form id="upload-form" enctype="multipart/form-data">
+                <input type="file" id="file" name="file" required><br>
+                <button type="button" onclick="uploadFile()">Upload File</button>
+            </form>
+            <p id="file-result"></p>
+            <table id="file-table" hidden>
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const FILE_URL = '/file/upload'; // Backend URL for file upload
+
+        // File Upload Function
+        function uploadFile() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch(FILE_URL, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(error => {
+                        throw new Error(error.error || "Unknown error");
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('file-result').innerText = `Error: ${data.error}`;
+                } else {
+                    document.getElementById('file-result').innerText = `File Status: ${data.status}`;
+                    updateFileTable(data.filename, data.status);
+                }
+            })
+            .catch(error => {
+                document.getElementById('file-result').innerText = `Error: ${error.message}`;
+            });
+        }
+
+        // Update File Table
+        function updateFileTable(filename, status) {
+            const table = document.getElementById('file-table');
+            const tbody = table.querySelector('tbody');
+
+            const row = document.createElement('tr');
+            const nameCell = document.createElement('td');
+            const statusCell = document.createElement('td');
+
+            nameCell.innerText = filename;
+            statusCell.innerText = status;
+
+            row.appendChild(nameCell);
+            row.appendChild(statusCell);
+            tbody.appendChild(row);
+
+            table.hidden = false;
+        }
+    </script>
 </body>
 </html>
