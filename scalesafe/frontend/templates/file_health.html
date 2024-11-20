@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Health Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #518f94, #7ca8ab);
+            color: white;
+            margin: 0;
+            padding: 0;
+        }  
+        .container {
+            width: 90%;
+            margin: auto;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: black;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        table {
+            margin: 10px auto;
+            width: 100%;
+            max-width: 600px;
+            background: #333;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px; 
+            text-align: center;
+        }
+        th {
+            background: #575757;
+        }
+        td {
+            background: #84d6db;
+        }
+        input[type="file"] { 
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #575757;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #84d6db;
+            color: black;
+        }
+        #file-result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>File Health Checker</h1>
+        <div class="section">
+            <form id="upload-form" enctype="multipart/form-data">
+                <input type="file" id="file" name="file" required><br>
+                <button type="button" onclick="uploadFile()">Upload File</button>
+            </form>
+            <p id="file-result"></p>
+            <table id="file-table" hidden>
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // File Upload Function with Hardcoded Response
+        function uploadFile() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Simulate a successful response
+            setTimeout(() => {
+                const simulatedResponse = {
+                    filename: file.name,
+                    status: 'Healthy'
+                };
+
+                document.getElementById('file-result').innerText = `File: ${simulatedResponse.filename} | Status: ${simulatedResponse.status}`;
+                updateFileTable(simulatedResponse.filename, simulatedResponse.status);
+            }, 500); // Simulate a short delay
+        }
+
+        // Update File Table
+        function updateFileTable(filename, status) {
+            const table = document.getElementById('file-table');
+            const tbody = table.querySelector('tbody');
+
+            const row = document.createElement('tr');
+            const nameCell = document.createElement('td');
+            const statusCell = document.createElement('td');
+
+            nameCell.innerText = filename;
+            statusCell.innerText = status;
+
+            row.appendChild(nameCell);
+            row.appendChild(statusCell); 
+            tbody.appendChild(row);
+
+            table.hidden = false;
+        }
+    </script>
+</body>
+</html>  

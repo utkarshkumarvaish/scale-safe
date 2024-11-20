@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Traffic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #518f94, #7ca8ab);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: black;
+            animation: fadeIn 2s ease-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+    </style> 
+</head> 
+<body>
+    <main>
+        <h1>Current Traffic</h1>
+        <form id="trafficForm" onsubmit="event.preventDefault(); analyzeTraffic();">
+            <label for="url">URL:</label>
+            <input type="text" id="url" name="url" required>
+            <button type="button" onclick="analyzeTraffic()">Analyze</button>
+        </form>
+        <div id="trafficGraph"></div>
+    </main>
+
+    <script>
+        function analyzeTraffic() {
+            window.location.href = "https://ahrefs.com/traffic-checker";
+        }
+    </script>
+</body>
+</html>
