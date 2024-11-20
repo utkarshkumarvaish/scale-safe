@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Health Checker</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -86,23 +87,65 @@
 </head>
 <body>
     <div class="sidebar">
-        <a href="#">Home</a>
-        <a href="#">Analytics</a>
-        <a href="#">Reports</a>
-        <a href="#">Settings</a>
+        <a href="{{ url_for('file_health') }}">File Health</a>
+        <a href="{{ url_for('current_traffic') }}">Current Traffic</a>
     </div>
     <div class="content">
-        <h1>Dashboard</h1>
+        <h1>Scale Safe Dashboard</h1>
         <form id="uploadForm">
-            <input type="file" id="file" name="file" required>
             <button type="button" onclick="redirectToFileHealth()">Upload</button>
+            <button type="button" onclick="redirectToCurrent()">Analyze</button>
         </form>
-        
     </div>
 
     <script>
         function redirectToFileHealth() {
             window.location.href = "http://127.0.0.1:5000/file-health";
+        }
+
+        // File Upload Function with Hardcoded Response
+        function uploadFile() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Simulate a successful response
+            setTimeout(() => {
+                const simulatedResponse = {
+                    filename: file.name,
+                    status: 'Healthy'
+                };
+
+                document.getElementById('file-result').innerText = `File: ${simulatedResponse.filename} | Status: ${simulatedResponse.status}`;
+                updateFileTable(simulatedResponse.filename, simulatedResponse.status);
+
+                // Redirect to the specified link
+                window.location.href = "http://127.0.0.1:5000/file-health";
+            }, 500); // Simulate a short delay
+        }
+        function redirectToCurrent() {
+            window.location.href = "http://127.0.0.1:5000/current-traffic";
+        }
+
+
+        // Update File Table
+        function updateFileTable(filename, status) {
+            const table = document.getElementById('file-table');
+            const tbody = table.querySelector('tbody');
+
+            const row = document.createElement('tr');
+            const nameCell = document.createElement('td');
+            const statusCell = document.createElement('td');
+
+            nameCell.innerText = filename;
+            statusCell.innerText = status;
+
+            row.appendChild(nameCell);
+            row.appendChild(statusCell); 
+            tbody.appendChild(row);
+
+            table.hidden = false;
         }
     </script>
 </body>
